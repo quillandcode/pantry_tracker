@@ -36,13 +36,14 @@ class AdminVisitControllerTest {
 
     @Test
     void getAllVisits_WithoutFilters_Returns200AndList() throws Exception {
-        VisitResponse visit = new VisitResponse(1L, "John Smith", "75009", 2, LocalDateTime.now());
+        VisitResponse visit = new VisitResponse(1L, "John", "Smith", "75009", 2, LocalDateTime.now());
         when(visitService.getAllVisits(null, null, null)).thenReturn(List.of(visit));
 
         mockMvc.perform(get("/api/admin/visits"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].visitorName").value("John Smith"));
+                .andExpect(jsonPath("$[0].firstName").value("John"))
+                .andExpect(jsonPath("$[0].lastName").value("Smith"));
     }
 
     @Test
@@ -64,7 +65,7 @@ class AdminVisitControllerTest {
 
     @Test
     void exportCsv_ReturnsCsvFileHeaderAndContent() throws Exception {
-        String mockCsv = "ID,Visitor Name,Zip Code,Household Size,Created At\n1,\"John Smith\",75009,2,2026-09-04T10:00:00\n";
+        String mockCsv = "ID,First Name,Last Name,Zip Code,Household Size,Created At\n1,\"John\",\"Smith\",75009,2,2026-09-04T10:00:00\n";
         when(visitService.generateCsvExport(null, null, null)).thenReturn(mockCsv);
 
         mockMvc.perform(get("/api/admin/visits/export"))

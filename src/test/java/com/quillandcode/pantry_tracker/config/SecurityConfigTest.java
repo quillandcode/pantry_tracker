@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = {VisitController.class, AdminVisitController.class})
 @Import(SecurityConfig.class)
+@ActiveProfiles("test")
 class SecurityConfigTest {
 
     @Autowired
@@ -33,7 +35,7 @@ class SecurityConfigTest {
 
     @Test
     void publicKioskEndpoint_AllowsUnauthenticatedPost() throws Exception {
-        CreateVisitRequest request = new CreateVisitRequest("Jane Doe", "75009", 3);
+        CreateVisitRequest request = new CreateVisitRequest("Ochaco", "Uraraka", "75009", 3);
 
         mockMvc.perform(post("/api/visits")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -50,7 +52,7 @@ class SecurityConfigTest {
     @Test
     void adminEndpoint_AllowsValidBasicAuth() throws Exception {
         mockMvc.perform(get("/api/admin/visits")
-                .with(httpBasic("admin", "pantryadmin123")))
+                .with(httpBasic("testadmin", "testpass123")))
                 .andExpect(status().isOk());
     }
 }

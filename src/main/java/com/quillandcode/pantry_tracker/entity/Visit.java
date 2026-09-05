@@ -11,8 +11,11 @@ public class Visit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "visitor_name", nullable = false)
-    private String visitorName;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+    
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
 
     @Column(name = "zip_code", nullable = false, length = 10)
     private String zipCode;
@@ -27,8 +30,9 @@ public class Visit {
         // Required by JPA specification
     }
 
-    public Visit(String visitorName, String zipCode, Integer householdSize) {
-        this.visitorName = visitorName;
+    public Visit(String firstName, String lastName, String zipCode, Integer householdSize) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.zipCode = zipCode;
         this.householdSize = householdSize;
     }
@@ -43,12 +47,20 @@ public class Visit {
         return id;
     }
 
-    public String getVisitorName() {
-        return visitorName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setVisitorName(String visitorName) {
-        this.visitorName = visitorName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getZipCode() {

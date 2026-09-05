@@ -6,9 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record CreateVisitRequest(
-    @NotBlank(message = "Visitor name is required")
-    String visitorName,
+    @NotBlank(message = "First name is required")
+    String firstName,
 
+    @NotBlank(message = "Last name is required")
+    String lastName,
+    
     @NotBlank(message = "Zip code is required")
     @Pattern(regexp = "^\\d{5}(-\\d{4})?$", message = "Must be a valid 5-digit or 9-digit ZIP code")
     String zipCode,

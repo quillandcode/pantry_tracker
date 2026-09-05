@@ -22,20 +22,21 @@ class VisitRepositoryTest {
 
     @Test
     void whenSave_thenPersistsDataAndTriggersPrePersist() {
-        Visit visit = new Visit("Alice Johnson", "75009", 4);
+        Visit visit = new Visit("Ichigo", "Kurasaki", "75009", 4);
 
         Visit saved = visitRepository.save(visit);
         entityManager.flush();
 
         assertNotNull(saved.getId());
         assertNotNull(saved.getCreatedAt());
-        assertEquals("Alice Johnson", saved.getVisitorName());
+        assertEquals("Ichigo", saved.getFirstName());
+        assertEquals("Kurasaki", saved.getLastName());
     }
 
     @Test
     void whenQueryWithSpecification_thenReturnsFilteredResults() {
-        Visit v1 = new Visit("Alice", "75009", 4);
-        Visit v2 = new Visit("Bob", "90210", 2);
+        Visit v1 = new Visit("Boaty", "McBoatface", "75009", 4);
+        Visit v2 = new Visit("Flipto", "Decrypto", "90210", 2);
         entityManager.persist(v1);
         entityManager.persist(v2);
         entityManager.flush();
@@ -45,6 +46,6 @@ class VisitRepositoryTest {
         List<Visit> results = visitRepository.findAll(zipSpec);
 
         assertEquals(1, results.size());
-        assertEquals("Alice", results.get(0).getVisitorName());
+        assertEquals("Boaty", results.get(0).getFirstName());
     }
 }

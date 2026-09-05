@@ -25,7 +25,7 @@ class CreateVisitRequestTest {
 
     @Test
     void whenValidRequest_thenNoViolations() {
-        CreateVisitRequest request = new CreateVisitRequest("Jane Doe", "75009", 3);
+        CreateVisitRequest request = new CreateVisitRequest("Jane", "Doe", "75009", 3);
         Set<ConstraintViolation<CreateVisitRequest>> violations = validator.validate(request);
         
         assertTrue(violations.isEmpty());
@@ -33,7 +33,7 @@ class CreateVisitRequestTest {
 
     @Test
     void whenValid9DigitZipCode_thenNoViolations() {
-        CreateVisitRequest request = new CreateVisitRequest("Jane Doe", "75009-1234", 3);
+        CreateVisitRequest request = new CreateVisitRequest("Jane", "Doe", "75009-1234", 3);
         Set<ConstraintViolation<CreateVisitRequest>> violations = validator.validate(request);
         
         assertTrue(violations.isEmpty());
@@ -41,18 +41,28 @@ class CreateVisitRequestTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", "   "})
-    void whenBlankVisitorName_thenViolation(String invalidName) {
-        CreateVisitRequest request = new CreateVisitRequest(invalidName, "75009", 3);
+    void whenBlankFirstName_thenViolation(String invalidName) {
+        CreateVisitRequest request = new CreateVisitRequest(invalidName, "Doe", "75009", 3);
         Set<ConstraintViolation<CreateVisitRequest>> violations = validator.validate(request);
 
         assertFalse(violations.isEmpty());
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("visitorName")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("firstName")));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   "})
+    void whenBlankLastName_thenViolation(String invalidName) {
+        CreateVisitRequest request = new CreateVisitRequest("Jane", invalidName, "75009", 3);
+        Set<ConstraintViolation<CreateVisitRequest>> violations = validator.validate(request);
+
+        assertFalse(violations.isEmpty());
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("lastName")));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"7500", "ABCDE", "750091234", "75009-", "75009-12345"})
     void whenInvalidZipCode_thenViolation(String invalidZip) {
-        CreateVisitRequest request = new CreateVisitRequest("Jane Doe", invalidZip, 3);
+        CreateVisitRequest request = new CreateVisitRequest("Jane", "Doe", invalidZip, 3);
         Set<ConstraintViolation<CreateVisitRequest>> violations = validator.validate(request);
 
         assertFalse(violations.isEmpty());
@@ -62,7 +72,7 @@ class CreateVisitRequestTest {
     @ParameterizedTest
     @ValueSource(ints = {0, -1, -10})
     void whenHouseholdSizeLessThanOne_thenViolation(int invalidSize) {
-        CreateVisitRequest request = new CreateVisitRequest("Jane Doe", "75009", invalidSize);
+        CreateVisitRequest request = new CreateVisitRequest("Jane", "Doe", "75009", invalidSize);
         Set<ConstraintViolation<CreateVisitRequest>> violations = validator.validate(request);
 
         assertFalse(violations.isEmpty());
@@ -71,9 +81,9 @@ class CreateVisitRequestTest {
 
     @Test
     void whenNullValues_thenViolations() {
-        CreateVisitRequest request = new CreateVisitRequest(null, null, null);
+        CreateVisitRequest request = new CreateVisitRequest(null, null, null, null);
         Set<ConstraintViolation<CreateVisitRequest>> violations = validator.validate(request);
 
-        assertEquals(3, violations.size());
+        assertEquals(4, violations.size());
     }
 }
