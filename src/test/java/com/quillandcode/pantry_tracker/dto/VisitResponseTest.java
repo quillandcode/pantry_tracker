@@ -12,7 +12,7 @@ class VisitResponseTest {
 
     @Test
     void whenFromEntity_thenAllFieldsMappedCorrectly() {
-        Visit visit = new Visit("Jane Doe", "75009", 4);
+        Visit visit = new Visit("Jane", "Doe", "75009", 4);
         LocalDateTime now = LocalDateTime.now();
         
         // Use ReflectionTestUtils to set fields managed by JPA/database lifecycle
@@ -22,7 +22,8 @@ class VisitResponseTest {
         VisitResponse response = VisitResponse.fromEntity(visit);
 
         assertEquals(100L, response.id());
-        assertEquals("Jane Doe", response.visitorName());
+        assertEquals("Jane", response.firstName());
+        assertEquals("Doe", response.lastName());
         assertEquals("75009", response.zipCode());
         assertEquals(4, response.householdSize());
         assertEquals(now, response.createdAt());

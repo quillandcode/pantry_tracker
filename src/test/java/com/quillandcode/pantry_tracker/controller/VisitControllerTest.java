@@ -35,8 +35,8 @@ class VisitControllerTest {
 
     @Test
     void createVisit_ValidInput_Returns201Created() throws Exception {
-        CreateVisitRequest request = new CreateVisitRequest("Jane Doe", "75009", 4);
-        VisitResponse mockResponse = new VisitResponse(1L, "Jane Doe", "75009", 4, LocalDateTime.now());
+        CreateVisitRequest request = new CreateVisitRequest("Izuku", "Midoriya", "75009", 4);
+        VisitResponse mockResponse = new VisitResponse(1L, "Izuku", "Midoriya", "75009", 4, LocalDateTime.now());
 
         when(visitService.createVisit(any(CreateVisitRequest.class))).thenReturn(mockResponse);
 
@@ -46,14 +46,15 @@ class VisitControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.visitorName").value("Jane Doe"))
+                .andExpect(jsonPath("$.firstName").value("Izuku"))
+                .andExpect(jsonPath("$.lastName").value("Midoriya"))
                 .andExpect(jsonPath("$.zipCode").value("75009"))
                 .andExpect(jsonPath("$.householdSize").value(4));
     }
 
     @Test
     void createVisit_InvalidInput_Returns400BadRequest() throws Exception {
-        CreateVisitRequest invalidRequest = new CreateVisitRequest("", "ABCDE", 0);
+        CreateVisitRequest invalidRequest = new CreateVisitRequest("", "", "ABCDE", 0);
 
         mockMvc.perform(post("/api/visits")
                 .with(csrf())

@@ -22,7 +22,7 @@ public class VisitService {
     }
 
     public VisitResponse createVisit(CreateVisitRequest request) {
-        Visit visit = new Visit(request.visitorName(), request.zipCode(), request.householdSize());
+        Visit visit = new Visit(request.firstName(), request.lastName(), request.zipCode(), request.householdSize());
         Visit savedVisit = visitRepository.save(visit);
         return VisitResponse.fromEntity(savedVisit);
     }
@@ -42,17 +42,20 @@ public class VisitService {
     public String generateCsvExport(String zipCode, LocalDateTime startDate, LocalDateTime endDate) {
         List<VisitResponse> visits = getAllVisits(zipCode, startDate, endDate);
         StringBuilder sb = new StringBuilder();
-        sb.append("ID,Visitor Name,Zip Code,Household Size,Created At\n");
-    
+        sb.append("ID,First Name,Last Name,Zip Code,Household Size,Created At\n");
+
         for (VisitResponse v : visits) {
-            String escapedName = v.visitorName().replace("\"", "\"\"");
+            String escapedFirstName = v.firstName() != null ? v.firstName().replace("\"", "\"\"") : "";
+            String escapedLastName = v.lastName() != null ? v.lastName().replace("\"", "\"\"") : "";
+
             sb.append(v.id()).append(",")
-              .append("\"").append(escapedName).append("\",")
-              .append(v.zipCode()).append(",")
-              .append(v.householdSize()).append(",")
-              .append(v.createdAt()).append("\n");
+            .append("\"").append(escapedFirstName).append("\",")
+            .append("\"").append(escapedLastName).append("\",")
+            .append(v.zipCode()).append(",")
+            .append(v.householdSize()).append(",")
+            .append(v.createdAt()).append("\n");
         }
-    
+
         return sb.toString();
     }
 }

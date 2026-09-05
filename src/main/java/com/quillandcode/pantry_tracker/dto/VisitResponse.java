@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 
 public record VisitResponse(
     Long id,
-    String visitorName,
+    String firstName,
+    String lastName,
     String zipCode,
     Integer householdSize,
     LocalDateTime createdAt
@@ -13,7 +14,8 @@ public record VisitResponse(
     public static VisitResponse fromEntity(Visit visit) {
         return new VisitResponse(
             visit.getId(),
-            visit.getVisitorName(),
+            visit.getFirstName(),
+            visit.getLastName(),
             visit.getZipCode(),
             visit.getHouseholdSize(),
             visit.getCreatedAt()
